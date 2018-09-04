@@ -397,8 +397,8 @@ if __name__ == "__main__":
 			n0,n1 = vq.shape
 			vq    = vq.reshape((-1,4,n1)).mean(axis=1)
 			dates = dates[0::4]
-		vq,lons  = interpolateFluxFile(vq)
-		G,Q,D    = linkTime(vq,dates,Source=Source,flux=flux,min_duration=min_duration,min_width=min_width,prop=prop,dt=dt,dcrit=dcrit)
+		vq,lons = interpolateFluxFile(vq)
+		G,Q,D   = linkTime(vq,dates,Source=Source,flux=flux,min_duration=min_duration,min_width=min_width,prop=prop,dt=dt,dcrit=dcrit)
 		toPick([G,Q,D],fname)
 		print 'Made injection file %s' % (fname)
 	else:

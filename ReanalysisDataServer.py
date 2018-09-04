@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+
+# Author: Rodrigo Caballero
+
 import os,sys,glob
 from numpy import *
 from netCDF4 import Dataset
