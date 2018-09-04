@@ -9,7 +9,7 @@ def drawCoastlinesNoRivers(m,color='k',linewidth=1):
     coasts_paths = coasts.get_paths()
     # In order to see which paths you want to retain or discard
     # you'll need to plot them one at a time noting those that you want etc.
-    for ipoly in range(0,75+1,1):
+    for ipoly in range(0,35+1,1):
       if ipoly > poly_stop: continue
       r = coasts_paths[ipoly]
       # Convert into lon/lat vertices
@@ -21,3 +21,13 @@ def drawCoastlinesNoRivers(m,color='k',linewidth=1):
       #pl.title(ipoly)
       #pl.show()
       #pl.clf()
+
+if __name__ == "__main__":
+
+	import sys
+	sys.path.insert(0, '/mnt/climstorage/cian/scripts')
+	from LambertProjector import *
+	import matplotlib.pyplot as pl
+
+	proj = LambertProjector(boundinglat=55,resolution=350.)
+	drawCoastlinesNoRivers(proj.m)
