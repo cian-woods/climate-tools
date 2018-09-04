@@ -10,8 +10,7 @@ import calendar
 from UnPickle import *
 from toPick import *
 
-#HomeDir = os.getenv('HOME')
-HomeDir = '/mnt/climstorage'
+HomeDir = os.getenv('HOME')
 
 class DataServer:
     def __init__(	self, 

@@ -14,6 +14,7 @@ import matplotlib.pyplot as pl
 import sys,os
 
 def myround(x, base=5):
+	# Rounding function
         return int(base * round(float(x)/base))
 
 def filterInjections(fname,blat,Source,blat0):
@@ -373,7 +374,7 @@ def lagged_wavenumber(Source,G,Q,D,Freq):
 
 if __name__ == "__main__": 
 
-	# Input parameters
+	# Input parameters from command line
 	Source       = str(sys.argv[1])
 	min_duration = int(sys.argv[2])
 	min_width    = int(sys.argv[3])
@@ -405,32 +406,3 @@ if __name__ == "__main__":
 		G,Q,D = unpick(fname)
 	testInj(G,D)
 	G_,Q_,D_ = filterInjections(fname,blat=fblat,Source=Source,blat0=blat)
-
-	# Make into txt file
-	#fname = 'WoodsEtAl2013.ERAInt.intrusions.%s-%s.%s.%sx6hr.%sdeg.%sN.filtered.%sN.txt' % (YearRange[0],YearRange[1],Season,min_duration,min_width,blat,fblat)
-	#makeDataset(G_,D_,Q_,fname)
-
-	#if time_freq == 24: Freq = 'dailymean'
-	#if time_freq ==  6: Freq =   '6hourly'
-	#lagged_wavenumber(Source,G,Q,D,Freq)
-
-	"""
-	# Make percentile injection files
-	percentiles = range(30,98+1,1)
-	vq,dates    = unpick('/mnt/climstorage/cian/scripts/newfluxfiles/%s/%s/%s.moist.%s-%s.%s-%shPa.%sN.%s.p' % (blat,Source,Source,YearRange[0],YearRange[1],LevRange[0],LevRange[1],blat,Season))
-	vq,lons     = interpolateFluxFile(vq)
-	vqpos       = vq.reshape(-1)[np.where(vq.reshape(-1)>0)]
-	# Percentile fluxes (rounded to nearest 5 Tg day**-1 deg**-1)
-	Flux  = [myround(stats.scoreatpercentile(vqpos,pi),base=1) for pi in percentiles]
-	for flux_i in Flux:
-		fname = '/mnt/climstorage/cian/newintrusions/%s_intrusions.%s-%s.%s.%sx6hr.%sdeg.%s.%sdt.%s.%s.%sN.p' % (Source,YearRange[0],YearRange[1],Season,min_duration,min_width,flux_i,dt,dcrit,prop,blat)
-		if not os.path.isfile(fname):
-			G,Q,D    = linkTime(vq,dates,Source=Source,flux=flux_i,min_duration=min_duration,min_width=min_width,prop=prop,dt=dt,dcrit=dcrit)
-			toPick([G,Q,D],fname)
-			print 'Made injection file %s' % (fname)
-		else:
-			print 'Injection file %s already exists. Did nothing.' % (fname)
-			G,Q,D = unpick(fname)
-		filterInjections(fname,blat=fblat,Source=Source,blat0=blat)
-		testInj(G,D)
-	"""
