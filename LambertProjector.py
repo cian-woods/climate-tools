@@ -1,3 +1,10 @@
+
+
+
+# Author: Rodrigo Caballero
+
+
+
 import os,sys
 from mpl_toolkits import basemap
 from mpl_toolkits.basemap import Basemap
@@ -15,8 +22,6 @@ class LambertProjector:
         # set up map
         self.m = Basemap(projection=Projection,
                          boundinglat=boundinglat, lon_0=0, resolution='i')
-#       self.m = Basemap(projection='nplaea',
-#                        boundinglat=boundinglat, lon_0=0, resolution='c',round=False)
         self.nx = int( (90.-boundinglat)*2.*self.m.rmajor*np.pi/180./resolution/1000.)
         # make sure number is even, to avoid point on pole which has undefined longitude
         self.nx = self.nx/2*2 

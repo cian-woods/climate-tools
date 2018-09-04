@@ -1,3 +1,8 @@
+
+
+# Author: Rodrigo Caballero
+
+
 """
 Here is a silly example of its usage:
 

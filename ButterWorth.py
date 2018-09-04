@@ -15,67 +15,6 @@ def butter_bandpass_filter(data, lowcut, highcut, fs, order=5):
 	y = lfilter(b, a, data, axis=0)
 	return y
 
-def all(lwl,hwl):
-	# Lambert
-	proj = LambertProjector(boundinglat=40,resolution=80.,Projection='nplaea')
-	# CMIP5
-	syn1,syn2 = [],[]
-	Models = [g[9:] for g in glob.glob('../rcp85/*') if g[9:]!='FGOALS-g2']
-	for Model in Models:
-		#S1,lons1,lats1 = unpick('synopfiles/%s.msl.%s-%sdays-pass.std.p' % (Model,lwl,hwl))
-		S1,lons1,lats1 = unpick('/qnap/cian/cmip/scripts/synopfiles/%s.msl.%s-%sdays-pass.std.rcp85.p' % (Model,lwl,hwl))
-		S1 = proj(S1,lons1,lats1)
-		S2,lons2,lats2 = unpick('/qnap/cian/cmip/scripts/synopfiles/%s.msl.%s-%sdays-pass.std.historical.p' % (Model,lwl,hwl))
-		S2 = proj(S2,lons2,lats2)
-		# Plot std
-		cseq = np.arange(-200,200+25,25)
-		plt.figure(1)
-		cf   = proj.m.contourf(proj.x,proj.y,S1-S2,cseq,cmap=plt.cm.RdBu_r,extend='both')
-		cbar = plt.colorbar(cf)
-		cbar.set_label('Standard deviation [hPa]')
-		proj.m.drawcoastlines(color='0.4')
-		proj.m.drawparallels([70,80],latmax=90)
-		plt.savefig('figs/bias/synop/%s.%s-%sdays.pdf' % (Model,lwl,hwl),format='pdf')
-		plt.close()
-		syn1.append(S1)
-		syn2.append(S2)
-	syn1 = np.array(syn1)/10.
-	syn2 = np.array(syn2)/10.
-	syn  = syn1 - syn2
-#	syn  = syn1/syn1.max() - syn2/syn2.max()
-	stipx,stipy = stipling(syn,xx=proj.x,yy=proj.y,x=None,y=None,thresh=0.8)
-	syn = syn.mean(axis=0)
-
-	# Plot std
-	cseq = 17
-	plt.figure(1)
-	cf   = plt.contourf(proj.x,proj.y,syn,cseq,cmap=plt.cm.RdBu_r,extend='both')
-	plt.plot(stipx[::3,::3],stipy[::3,::3],'k.',alpha=0.5)
-	cbar = plt.colorbar(cf)
-	cbar.set_label('Standard deviation [10$^{-1}$ hPa]')
-	proj.m.drawcoastlines(color='0.4')
-	proj.m.drawparallels([70,80],latmax=90)
-	plt.savefig('figs/bias/synop/%s.%s-%sdays.pdf' % ('all',lwl,hwl),format='pdf')
-	plt.close()
-
-        plt.figure(1)
-        cf   = plt.contourf(proj.x,proj.y,syn1.mean(axis=0),cseq,cmap=plt.cm.RdBu_r,extend='both')
-        cbar = plt.colorbar(cf)
-        cbar.set_label('Standard deviation [10$^{-1}$ hPa]')
-        proj.m.drawcoastlines(color='0.4')
-        proj.m.drawparallels([70,80],latmax=90)
-        plt.savefig('figs/bias/synop/%s.%s-%sdays.rcp85.pdf' % ('all',lwl,hwl),format='pdf')
-        plt.close()
-
-        plt.figure(1)
-        cf   = plt.contourf(proj.x,proj.y,syn2.mean(axis=0),cseq,cmap=plt.cm.RdBu_r,extend='both')
-        cbar = plt.colorbar(cf)
-        cbar.set_label('Standard deviation [10$^{-1}$ hPa]')
-        proj.m.drawcoastlines(color='0.4')
-        proj.m.drawparallels([70,80],latmax=90)
-        plt.savefig('figs/bias/synop/%s.%s-%sdays.hist.pdf' % ('all',lwl,hwl),format='pdf')
-        plt.close()
-
 def makeFile(Source,lwl,hwl,Season):
         # Make file
         years = range(1980,2012+1,1)
